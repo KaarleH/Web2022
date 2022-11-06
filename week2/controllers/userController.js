@@ -1,15 +1,19 @@
 'use strict';
-const {users, getUser} = require('../models/userModel');
+const {getUser, getAllUsers} = require('../models/userModel');
 
-const user_list_get = (req, res) => {
+
+const user_list_get = async(req, res) => {
+    const users = await getAllUsers();
     res.json(users);
 };
 
-const user_get = (req, res) => {
-    const user = getUser(req.params.id);
-    delete user.password;
-    console.log("Käyttäjä", user);
-    res.json(user);
+const user_get = async (req, res) => {
+    const user = await getUser(req.params.id);
+    if (user.length > 0)  {
+        res.json(user.pop());
+    } else {
+        res.send("virhe");
+    }
 }
 
 const user_post = (req, res) => {
