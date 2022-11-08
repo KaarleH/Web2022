@@ -1,5 +1,6 @@
 'use strict';
-const {getUser, getAllUsers} = require('../models/userModel');
+const {getUser, getAllUsers, addUser} = require('../models/userModel');
+
 
 
 const user_list_get = async(req, res) => {
@@ -14,12 +15,28 @@ const user_get = async (req, res) => {
     } else {
         res.send("virhe");
     }
-}
 
-const user_post = (req, res) => {
-    console.log(req.body)
-    res.send("Add user route");
-}
+};
+
+const user_post = async (req, res) => {
+    console.log('user_post', req.body, req.file);
+    const data = [
+        req.body.name,
+        req.body.email,
+        req.body.passwd,
+        0,
+    ];
+
+    const result = await addUser(data);
+    if(result.length > 0) {
+        res.json({
+            message: 'user added',
+            user_id: result.insertId,
+        });
+    } else {
+        res.send('virhe')
+    }
+};
 
 module.exports = {
     user_list_get,
