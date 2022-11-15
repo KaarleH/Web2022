@@ -6,7 +6,6 @@ const passport = require('./utils/pass');
 const app = express();
 const port = 3000;
 
-
 const loggedIn = (req, res, next) => {
   if (req.user) {
     next();
@@ -16,16 +15,16 @@ const loggedIn = (req, res, next) => {
 };
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(express.urlencoded({extended: true}));
 
 const username = 'foo';
 const password = 'bar';
 
 app.use(cookieParser());
-app.use(session({ secret: 'jgurhgujiod', cookie: { maxAge: 60000 } }));
+app.use(session({secret: 'gdsfhgxnhmc', cookie: {maxAge: 60000}}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.set('views', './views');
 app.set('view engine', 'pug');
@@ -38,6 +37,10 @@ app.get('/form', (req, res) => {
   res.render('form');
 });
 
+app.get('/secret', loggedIn, (req, res) => {
+  res.render('secret');
+});
+
 app.post('/login',
     passport.authenticate('local', {failureRedirect: '/form'}),
     (req, res) => {
@@ -45,13 +48,10 @@ app.post('/login',
       res.redirect('/secret');
     });
 
-// modify app.get('/secret',...
-app.get('/secret', loggedIn, (req, res) => {
-  res.render('secret');
-});
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
+  req.logout(() => {
+    res.redirect('/');
+  });
 });
 
 app.get('/setCookie/:clr', (req, res) => {
