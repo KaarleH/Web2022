@@ -2,7 +2,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const passport = require('./utils/pass');
+const passport = require('./utils/app');
 const app = express();
 const port = 3000;
 
